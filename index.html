@@ -95,7 +95,7 @@ a{color:inherit}
 .card:hover{border-color:var(--line-2);transform:translateY(-3px)}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
 .reveal.in{opacity:1;transform:none}
-@media(max-width:900px){section{padding:64px 0}.grid3,.grid2{grid-template-columns:1fr}.hero-grid,.cmp,.split{grid-template-columns:1fr!important}nav .links{display:none}}
+@media(max-width:900px){section{padding:64px 0}.grid3,.grid2{grid-template-columns:1fr}.hero-grid,.cmp,.split{grid-template-columns:1fr!important}nav .links{display:none!important}}
 
 /* NAV */
 nav{position:sticky;top:0;z-index:70;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -123,6 +123,20 @@ nav .links a:hover::after{width:100%}
 .moon{display:none}.sun{display:block}
 [data-theme="light"] .moon{display:block}[data-theme="light"] .sun{display:none}
 nav .btn{padding:11px 20px;min-height:44px;font-size:14.5px}
+.navtoggle{display:none;background:transparent;border:1px solid var(--line-2);border-radius:10px;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;color:var(--text)}
+.navtoggle svg{width:20px;height:20px}
+.navtoggle:hover{border-color:var(--accent)}
+@media(max-width:900px){
+  .navtoggle{display:flex}
+  nav .links{display:none!important}
+  nav .links.open{display:flex!important;position:absolute;top:72px;left:0;right:0;flex-direction:column;align-items:flex-start;gap:4px;background:var(--bg);border-bottom:1px solid var(--line);padding:16px 24px 24px;box-shadow:var(--shadow)}
+  nav .links.open a{padding:10px 0;width:100%}
+  nav .links .hasdrop{flex-direction:column;align-items:flex-start;width:100%}
+  nav .links .hasdrop .drop{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:none;background:none;padding:4px 0 4px 14px;min-width:0;display:flex}
+}
+@media(max-width:720px){
+  nav .nav-right>.btn-primary{display:none}
+}
 
 /* HERO */
 .hero{position:relative;overflow:hidden;padding:96px 0 100px;border-bottom:1px solid var(--line)}
@@ -236,7 +250,7 @@ sup a{color:var(--accent);text-decoration:none;font-size:.7em;font-weight:700}
 <nav aria-label="Primary">
   <div class="wrap bar">
     <a class="logo" href="#" aria-label="Marselle home"><span class="dot" aria-hidden="true"></span>Marselle</a>
-    <div class="links">
+    <div class="links" id="navLinks">
       <div class="hasdrop"><a href="#who" aria-haspopup="true">Clinics ▾</a><div class="drop"><a href="dental.html">Dental</a><a href="vet.html">Veterinary</a><a href="physio.html">Physiotherapy</a></div></div>
       <a href="#how">How it works</a><a href="#organic">Organic growth</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
     </div>
@@ -246,6 +260,9 @@ sup a{color:var(--accent);text-decoration:none;font-size:.7em;font-weight:700}
         <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>
       <a class="btn btn-primary" href="#teardown">Free teardown</a>
+      <button class="navtoggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks" title="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
     </div>
   </div>
 </nav>
@@ -695,6 +712,31 @@ sup a{color:var(--accent);text-decoration:none;font-size:.7em;font-weight:700}
 })();
 // forms
 function mSubmit(e){e.preventDefault();var f=e.target;var c=(f.querySelector('input[name=clinic]')?f.querySelector('input[name=clinic]').value:'your clinic')||'your clinic';c=c.trim();try{fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(f)});}catch(err){}var m=document.createElement('p');m.className='micro';m.style.color='var(--accent)';m.textContent='Thanks \u2014 your free Growth X-ray for '+c+' arrives within 24 hours by email.';f.parentNode.replaceChild(m,f);return false;}
+</script>
+
+<script>
+(function(){
+  var toggle=document.getElementById('navToggle');
+  var links=document.getElementById('navLinks');
+  if(!toggle||!links) return;
+  function closeMenu(){
+    links.classList.remove('open');
+    toggle.setAttribute('aria-expanded','false');
+  }
+  toggle.addEventListener('click',function(){
+    var isOpen=links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  links.addEventListener('click',function(e){
+    if(e.target.tagName==='A'){ closeMenu(); }
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){ closeMenu(); }
+  });
+  window.addEventListener('resize',function(){
+    if(window.innerWidth>900){ closeMenu(); }
+  });
+})();
 </script>
 </body>
 </html>
