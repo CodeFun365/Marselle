@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://marselle.io/sitemap.xml
